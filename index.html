@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ТЕРБАНК</title>
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #303f9f;
+            --accent-color: #3f51b5;
+            --text-color: #333;
+            --light-text: #fff;
+            --gray-text: #666;
+            --bg-color: #f5f5f7;
+            --card-bg: linear-gradient(135deg, #303f9f, #1a237e);
+            --icon-color: #5c6bc0;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 500;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .main-content {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tab-content {
+            display: none;
+            flex: 1;
+        }
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            color: var(--light-text);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before, .card::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        .card::before {
+            top: -50px;
+            right: -50px;
+            width: 120px;
+            height: 120px;
+        }
+        .card::after {
+            bottom: -80px;
+            right: -30px;
+            width: 160px;
+            height: 160px;
+        }
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .card-info {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .card-label {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 6px;
+        }
+        .card-value {
+            font-size: 16px;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        .card-number {
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            word-spacing: 8px;
+        }
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        .card-col {
+            width: 48%;
+        }
+        .balance-section {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .balance-info {
+            flex: 1;
+        }
+        .balance-label {
+            font-size: 14px;
+            color: var(--gray-text);
+            margin-bottom: 5px;
+        }
+        .balance-amount {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        .payment-options {
+            display: flex;
+            gap: 8px;
+        }
+        .payment-icon {
+            width: 36px;
+            height: 36px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--icon-color);
+            opacity: 0.9;
+        }
+        .main-button {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            max-width: 400px;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
+            transition: all 0.3s;
+            margin: 10px auto;
+        }
+        .main-button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        .card-logo {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 40px;
+            height: auto;
+            opacity: 0.9;
+        }
+        .nav-tabs {
+            display: flex;
+            background-color: #fff;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 5px;
+            font-size: 12px;
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .nav-tab.active {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        .nav-tab i {
+            display: block;
+            font-size: 22px;
+            margin-bottom: 4px;
+            color: var(--icon-color);
+            opacity: 0.9;
+        }
+        .operations-list {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .operation-item {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .operation-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #e8eaf6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--icon-color);
+            opacity: 0.9;
+            font-size: 18px;
+        }
+        .operation-details {
+            flex: 1;
+        }
+        .operation-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        .operation-description {
+            font-size: 12px;
+            color: var(--gray-text);
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 15px 0 10px;
+            padding-left: 5px;
+            color: var(--primary-color);
+        }
+        .business-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin: 5px 0;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-text);
+        }
+
+        @media (min-width: 768px) {
+            body {
+                background-color: #eaeaea;
+            }
+            .main-content {
+                max-width: 450px;
+                margin: 0 auto;
+                width: 100%;
+                background-color: var(--bg-color);
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            .nav-tabs {
+                max-width: 450px;
+                margin: 0 auto;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                border-radius: 12px 12px 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="#" class="back-button">←</a>
+        ТЕРБАНК
+    </div>
+
+    <div class="main-content">
+        <!-- Счет -->
+        <div id="account-tab" class="tab-content active">
+            <div class="card">
+                <div class="card-title">ВАША КАРТА</div>
+                
+                <div class="card-info">
+                    <div class="card-label">НОМЕР КАРТЫ</div>
+                    <div class="card-number">4598 5646 4566 2130</div>
+                </div>
+                
+                <div class="card-row">
+                    <div class="card-col">
+                        <div class="card-label">ДАТА</div>
+                        <div class="card-value">01/29</div>
+                    </div>
+                    <div class="card-col">
+                        <div class="card-label">CVV</div>
+                        <div class="card-value">345</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="balance-section">
+                <div class="balance-info">
+                    <div class="balance-label">ДОСТУПНЫЕ СРЕДСТВА</div>
+                    <div class="balance-amount">162 000 ₽</div>
+                </div>
+                <div class="payment-options">
+                    <div class="payment-icon">💳</div>
+                    <div class="payment-icon">📱</div>
+                </div>
+            </div>
+
+            <button class="main-button">ОПЛАТИТЬ</button>
+
+            <div class="section-title">Последние операции</div>
+            <div class="operations-list">
+                <div class="operation-item">
+                    <div class="operation-icon">🛒</div>
+                    <div class="operation-details">
+                        <div class="operation-title">супермаркет</div>
+                        <div class="operation-description">Сегодня, 14:30  -1 245 ₽</div>
+                    </div>
+                </div>
+                <div class="operation-item">
+                    <div class="operation-icon">💼</div>
+                    <div class="operation-details">
+                        <div class="operation-title">Зарплата</div>
+                        <div class="operation-description">25 мая  +47 000 ₽</div>
+                    </div>
+                </div>
+                <div class="operation-item">
+                    <div class="operation-icon">📱</div>
+                    <div class="operation-details">
+                        <div class="operation-title">моб.связь</div>
+                        <div class="operation-description">24 мая  -500 ₽</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Бизнес -->
+        <div id="business-tab" class="tab-content">
+            <div class="section-title">Бизнес статистика</div>
+            <div class="business-stats">
+                <div class="stat-card">
+                    <div class="stat-value">124 560 ₽</div>
+                    <div class="stat-label">Оборот за месяц</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Операции</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8 450 ₽</div>
+                    <div class="stat-label">Налоги</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Клиенты</div>
+                </div>
+            </div>
+
+            <div class="section-title">Быстрые действия</div>
+            <button class="main-button">ВЫСТАВИТЬ СЧЕТ</button>
+            <button class="main-button">ПЕРЕВОД КОНТРАГЕНТУ</button>
+        </div>
+
+        <!-- Платежи -->
+        <div id="payments-tab" class="tab-content">
+            <div class="section-title">Популярные платежи</div>
+            <div class="operations-list">
+                <div class="operation-item">
+                    <div class="operation-icon">📱</div>
+                    <div class="operation-details">
+                        <div class="operation-title">Мобильная связь</div>
+                        <div class="operation-description">Пополнение телефона</div>
+                    </div>
+                </div>
+                <div class="operation-item">
+                    <div class="operation-icon">🏠</div>
+                    <div class="operation-details">
+                        <div class="operation-title">ЖКХ</div>
+                        <div class="operation-description">Оплата коммунальных услуг</div>
+                    </div>
+                </div>
+                <div class="operation-item">
+                    <div class="operation-icon">🚗</div>
+                    <div class="operation-details">
+                        <div class="operation-title">Транспорт</div>
+                        <div class="operation-description">Топливо, штрафы, налоги</div>
+                    </div>
+                </div>
+                <div class="operation-item">
+                    <div class="operation-icon">🏦</div>
+                    <div class="operation-details">
+                        <div class="operation-title">Кредиты</div>
+                        <div class="operation-description">Погашение займов</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="main-button">ВСЕ ПЛАТЕЖИ</button>
+        </div>
+
+        <!-- Переводы -->
+        <div id="transfers-tab" class="tab-content">
+            <div class="section-title">Мои переводы</div>
+            <div class="operations-list">
+                <div class="operation-item">
+                    <div class="operation-icon">👩</div>
+                    <div class="operation-details">
+                        <div class="operation-title">Кузнецова Н.М.</div>
+                        <div class="operation-description">•••• 4456</div>
+                    </div>
+                </div>
+                <div class="operation-item">
+                    <div class="operation-icon">👨</div>
+                    <div class="operation-details">
+                        <div class="operation-title">Шапкин П.О.</div>
+                        <div class="operation-description">•••• 7821</div>
+                    </div>
+                </div>
+                <div class="operation-item">
+                    <div class="operation-icon">🏦</div>
+                    <div class="operation-details">
+                        <div class="operation-title">В другой банк</div>
+                        <div class="operation-description">по телефону или номеру карты</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="main-button">НОВЫЙ ПЕРЕВОД</button>
+            <button class="main-button">ПО ШАБЛОНУ</button>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <a href="#" class="nav-tab active" data-tab="account-tab">
+            <i>💳</i>
+            Счет
+        </a>
+        <a href="#" class="nav-tab" data-tab="business-tab">
+            <i>🏢</i>
+            Бизнес
+        </a>
+        <a href="#" class="nav-tab" data-tab="payments-tab">
+            <i>📲</i>
+            Платежи
+        </a>
+        <a href="#" class="nav-tab" data-tab="transfers-tab">
+            <i>⇄</i>
+            Переводы
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Убираем активный класс у всех табов
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Скрываем все содержимое табов
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Добавляем активный класс текущему табу
+                    this.classList.add('active');
+                    // Показываем соответствующее содержимое
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
